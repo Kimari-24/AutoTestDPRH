@@ -1,0 +1,30 @@
+# --- Entorno ---
+.env
+.env.*
+!.env.example
+
+# --- Backend (Python) ---
+backend/__pycache__/
+backend/**/__pycache__/
+backend/.pytest_cache/
+backend/*.egg-info/
+backend/.venv/
+backend/venv/
+backend/htmlcov/
+backend/.coverage
+
+# --- Frontend (Node) ---
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+frontend/*.local
+
+# --- Base de datos ---
+database/data/
+
+# --- Sistema / editores ---
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.log

@@ -1,0 +1,56 @@
+name: autotest-dprh
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: autotest_dprh_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-autotest_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-autotest_pass}
+      POSTGRES_DB: ${POSTGRES_DB:-autotest_dprh}
+    ports:
+      - "5432:5432"
+    volumes:
+      - dprh_postgres_data:/var/lib/postgresql/data
+      - ./database/init:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-autotest_user}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build:
+      context: .
+      dockerfile: docker/backend.Dockerfile
+    container_name: autotest_dprh_backend
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-autotest_user}:${POSTGRES_PASSWORD:-autotest_pass}@db:5432/${POSTGRES_DB:-autotest_dprh}
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/frontend.Dockerfile
+    container_name: autotest_dprh_frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+
+volumes:
+  dprh_postgres_data:

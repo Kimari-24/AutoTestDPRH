@@ -1,0 +1,30 @@
+@import "tailwindcss";
+
+/*
+  Paleta institucional AutoTest DPRH.
+  Se definen como variables CSS para reutilizarse en toda la app
+  mediante clases utilitarias de Tailwind (bg-dprh-guinda, etc.)
+  configuradas a continuacion con @theme.
+*/
+@theme {
+  --color-dprh-guinda: #6d1b3a;
+  --color-dprh-guinda-dark: #4d1129;
+  --color-dprh-azul: #1e5b8f;
+  --color-dprh-dorado: #c9a86a;
+  --color-dprh-bg: #f7f6f4;
+  --color-dprh-gray: #e8e6e2;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background-color: var(--color-dprh-bg);
+}
+
+/* Estilo reutilizable para inputs/selects de formularios (evita repetir
+   la misma cadena de utilidades de Tailwind en cada campo). */
+@layer components {
+  .campo {
+    @apply w-full rounded-lg border border-dprh-gray px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-dprh-azul;
+  }
+}
